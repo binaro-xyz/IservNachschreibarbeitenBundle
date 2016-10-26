@@ -10,15 +10,10 @@ final class Privilege
     /**
      * Users creating/modifying exercises
      */
-    const ACCESS_NACHSCHREIBARBEITEN = 'PRIV_ACCESS_NACHSCHREIBARBEITEN';
+    const ACCESS_NACHSCHREIBARBEITEN = 'PRIV_NACHSCHREIBARBEITEN_ACCESS';
 
     /**
      * Users excluded from exercises
      */
-    const EXCLUDED_FROM_EXERCISES = 'PRIV_EXERCISES_EXCLUDE';
-
-    /**
-     * Groups flagged to do exercises
-     */
-    const FLAG_DOES_EXERCISES = 'exercise_allowed';
+    const ADMIN_NACHSCHREIBARBEITEN = 'PRIV_NACHSCHREIBARBEITEN_ADMIN';
 }

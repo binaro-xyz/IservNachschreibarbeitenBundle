@@ -2,6 +2,7 @@
 // src/IServ/ExerciseBundle/Controller/ExerciseController.php
 namespace IServ\NachschreibarbeitenBundle\Controller;
 
+use IServ\NachschreibarbeitenBundle\Security\Privilege;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -23,6 +24,10 @@ class NachschreibarbeitenController extends AbstractNachschreibarbeitenControlle
      */
     public function indexAction()
     {
-     return array();
+      if(!$this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN)) {
+        throw $this->createAccessDeniedException("You are not allowed to view this page.");
+      } else {
+        return array();
+      }
     }
 }
