@@ -1,0 +1,51 @@
+{# src/IServ/CrudBundle/Resources/views/Crud/show_files.html.twig #}
+
+{{ form_start(downloadForm) }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ _('Submissions') }}</h3>
+    </div>
+    <table class="table table-condensed" id="exerciseSubmissions">
+        <thead>
+        <tr>
+            <th>{% if item.submissions is not empty %}
+                    <div ng-attr-check-all></div>{% endif %}</th>
+            <th>{{ _('User') }}</th>
+            <th>{{ _('Submission') }}</th>
+            <th>{{ _('Files') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if item.submissions is not empty %}
+            {% set current = '' %}
+            {% for submission in item.submissionsSorted %}
+                <tr>
+                    {% if current != submission.user %}
+                        <td colspan="2">
+                            <input type="checkbox" class="batch" name="iserv_exercise_element[elements][]" value="{{ submission.id }}"/> {{ submission.user|mailto(submission.user, item) }}
+                        </td>
+                    {% else %}
+                        <td colspan="2"></td>
+                    {% endif %}
+                    <td {% if submission.time > item.endDate %}class="text-danger"{% endif %}>{{ submission.time|ldatetime }}</td>
+                    <td>
+                        <a href="{{ path('exercise_file', {'id': submission.file.id}) }}">{{ submission.file }}</a>
+                        <span class="text-muted">({{ submission.file.size|size }})</span>
+                    </td>
+                </tr>
+                {% set current = submission.user %}
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="4" class="text-center"><em>{{ _('There are currently no submissions') }}</em></td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    {# Render hidden button to prevent it from being rendered in form_end if submissions are empty #}
+    <div class="panel-footer panel-footer-actions {{ item.submissions is empty ? ' hidden' : '' }}">
+        {{ form_widget(downloadForm.actions) }}
+    </div>
+</div>
+{{ form_row(downloadForm._token) }}
+</form>

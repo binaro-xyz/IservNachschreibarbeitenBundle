@@ -1,0 +1,11 @@
+{% extends admin.getTemplate('list_field_base') %}
+
+{%- block field_content -%}
+	{{  parent() }}
+
+	{% if not object.valid %}
+		<div class="pull-right glyphicon glyphicon-alert"
+			 data-toggle="tooltip"
+			 title="{{ _('Not active due to missing start or end date!') }}" />
+	{% endif %}
+{%- endblock -%}

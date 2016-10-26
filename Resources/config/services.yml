@@ -1,0 +1,37 @@
+# src/IServ/SkeletonBundle/Resources/config/services.yml
+services:
+#    iserv.crud.object.exercise:
+#        class: IServ\ExerciseBundle\Crud\ExerciseCrud
+#        arguments: [IServ\ExerciseBundle\Entity\Exercise]
+#        calls:
+#            - [setObjectManager, ["@iserv.exercise.manager"]]
+#            - [ setExerciseHelper, ["@iserv.exercise.helper"]]
+#            - [setDoctrine, ["@doctrine"]]
+#        tags:
+#            - { name: iserv.crud }
+
+#    iserv.exercise.helper:
+#        class: IServ\ExerciseBundle\Service\ExerciseHelper
+#        arguments: ["@doctrine", "@filesystem", "@session"]
+#
+#    iserv.exercise.manager:
+#      class: IServ\ExerciseBundle\Service\ExerciseManager
+#      arguments: ["@doctrine", "@iserv.exercise.helper"]
+#
+#    iserv.exercise.daterange.validator:
+#      class: IServ\ExerciseBundle\Validator\Constraints\DateRangeValidator
+#      tags:
+#          - { name: validator.constraint_validator, alias: iserv_exercise_daterange_validator }
+
+    # The listener will react on the MenuEvent from core and add a main menu entry.
+    iserv.nachreibarbeiten.menu:
+        class: IServ\NachschreibarbeitenBundle\EventListener\MenuListener
+        #arguments: ["@doctrine"]
+        tags:
+          - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu }
+
+    iserv.exercise.idesk:
+        class: IServ\NachschreibarbeitenBundle\EventListener\IDeskListener
+        #arguments: ["@doctrine"]
+        tags:
+          - { name: kernel.event_listener, event: iserv_portal.build_idesk, method: onBuildIDesk }

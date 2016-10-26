@@ -1,0 +1,213 @@
+{# src/IServ/ExerciseBundle/Resources/views/Exercise/show.html.twig #}
+{% extends "IServExerciseBundle::base.html.twig" %}
+
+{% set expired = exercise.endDate|date_modify('+' ~ exercise.tolerance ~ ' days') <= date() %}
+
+{% block page_title %}{{ exercise.title }} - {{ _('Exercises') }}{% endblock %}
+
+{% block entity_widget %}
+    {% spaceless %}
+        <table class="table table-condensed">
+            {% for child in form %}
+                {% set file = child.parent.vars.choices[child.vars.value].data.file %}
+                {# TODO: Fix and improve hackish layout #}
+                <tr>
+                    <td>
+                        {{ checkbox_row(child, { 'no_form_group': true, 'label_attr': label_attr, 'file_id': file.id }) }}
+                    </td>
+                    <td>
+                        <span class="text-muted">{{ file.size|size }}</span>
+                    </td>
+                    <td>
+                        {{ child.parent.vars.choices[child.vars.value].data.time|ldatetime }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endspaceless %}
+{% endblock entity_widget %}
+
+{% block checkbox_row %}
+    {% spaceless %}
+        {% set class = '' %}
+        {% if align_with_widget is defined or attr.align_with_widget is defined %}
+            {% set widget_col = widget_col|default(bootstrap_get_widget_col()) %}
+            {% set label_col = label_col|default(bootstrap_get_label_col()) %}
+            {% set class = 'col-' ~ col_size ~ '-' ~ widget_col ~ ' col-' ~ col_size ~ '-offset-' ~ label_col %}
+            <div class="form-group {% if form.vars.errors|length > 0 %} has-error{% endif %}">
+            <div class="{{ class }}">
+        {% endif %}
+
+        {% set checkboxdata %}
+            {% if label is not same as(false) %}
+                {% if not compound %}
+                    {% set label_attr = label_attr|merge({'for': id}) %}
+                {% endif %}
+                {% if required %}
+                    {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+                {% endif %}
+                {% if label is empty %}
+                    {% set label = name|humanize %}
+                {% endif %}
+                <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+                {{ block('checkbox_widget') }}
+                <a href="{{ path('exercise_file', {'id': file_id}) }}">{{ label -}}</a>
+                </label>
+            {% endif %}
+            {{ form_errors(form) }}
+        {% endset %}
+
+        <div class="checkbox">{{ checkboxdata|raw }}</div>
+
+        {{ block('form_help') }}
+
+        {% if align_with_widget is defined or attr.align_with_widget is defined %}
+            </div>
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock checkbox_row %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="{% if uploadForm is defined %}col-md-6{% else %}col-md-12{% endif %}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ _('Exercise details') }}</h3>
+                </div>
+
+                <table class="table">
+                    <colgroup>
+                        <col width="25%">
+                        <col width="75%">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>{{ _('Created by') }}:</th>
+                        <td>{{ exercise.owner.lastname }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ _('Start date') }}:</th>
+                        <td>{{ exercise.startdate|ldatetime }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ _('Deadline') }}:</th>
+                        <td>{{ exercise.enddate|ldatetime }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ _('Description') }}:</th>
+                        <td>{{ exercise.text|nl2br }}</td>
+                    </tr>
+                    {% if exercise.attachments is not empty %}
+                        <tr>
+                            <th colspan="2">{{ _('Supplied files') }}:</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <ul class="list-unstyled pl">
+                                    {% for attachment in exercise.attachments|isort('name') %}
+                                        <li>
+                                            <a href="{{ path('exercise_file', {'id': attachment.file.id}) }}">
+                                                {%- spaceless -%}
+                                                    {{ fileIcon(attachment.file) }}{{ attachment.name }}
+                                                    <span class="text-muted">({{ attachment.file.size|size }})</span>
+                                                {%- endspaceless -%}
+                                            </a>
+                                            {%- if attachment.description != '' %} - {{ attachment.description }}{% endif -%}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+        <div class="{% if uploadForm is defined %}col-md-6{% else %}col-md-12{% endif %}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {% if uploadForm is defined or textForm is defined %}
+                            {{ _('Submit results') }}
+                        {% elseif expired and text == null %}
+                            {{ _('No text submitted') }}
+                        {% else %}
+                            {{ _('Your submission') }}
+                        {% endif %}
+                    </h3>
+                </div>
+                {% if uploadForm is defined %}
+                    <div class="panel-body">
+                        <h5>{{ _('Your submitted files') }}</h5>
+                        {% if submissions is not empty %}
+                            {% if not expired %}
+                                {% form_theme deleteForm _self %}
+                                {{ form(deleteForm) }}
+                            {% else %}
+                                <table class="table table-condensed">
+                                    {% for submission in submissions %}
+                                        <tr>
+                                            <td>
+                                                <a href="{{ path('exercise_file', {'id': submission.file.id}) }}">{{ submission }}</a>
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">{{ submission.file.size|size }}</span>
+                                            </td>
+                                            <td>
+                                                {{ submission.file.time|ldatetime }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            {% endif %}
+                        {% else %}
+                            {% if not expired %}
+                                <p>{{ _('No files submitted yet.') }}</p>
+                            {% else %}
+                                <p class="text-danger">{{ icon('info-sign') }} {{ _('No files submitted.') }}</p>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if not expired %}
+                            <h5>{{ _('Upload a new file') }}</h5>
+                            {% if not is_granted('PRIV_EXERCISES_EXCLUDE') %}
+                                <div id="file-upload-container" class="file-action well">
+                                    {{ form(uploadForm, { 'style': 'inline','attr': {'id': 'file-upload'}}) }}
+                                </div>
+                            {% else %}
+                                <p class="text-warning">{{ icon('info-sign') }} {{ _('You cannot submit your results because you are excluded from participation in exercises.') }}</p>
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+                {% else %}
+                    <div class="panel-body">
+                        {% if not is_granted('PRIV_EXERCISES_EXCLUDE') %}
+                            {% if textForm is defined and not expired%}
+                                {{ form(textForm, {'style': null}) }}
+                            {% else %}
+                                <p>{{ text|nl2br }}</p>
+                                {% if not expired %}
+                                    <a href="{{ path('exercise_show', {'id': exercise.id, 'edit': true}) }}" class="btn btn-default btn-sm pull-right">{{ icon('edit') }}{{ _('Edit') }}</a>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <p class="text-warning">{{ icon('info-sign') }} {{ _('You cannot submit your results because you are excluded from participation in exercises.') }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts output='js/compiled/exercise.js' filter='?uglifyjs2'
+    '@IServExerciseBundle/Resources/public/js/exercise.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
