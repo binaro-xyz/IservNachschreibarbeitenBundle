@@ -1,33 +1,14 @@
-{# src/IServ/ExerciseBundle/Resources/views/idesk.html.twig #}
+{# src/IServ/NachschreibarbeitenBundle/Resources/views/idesk.html.twig #}
 {% extends "IServCoreBundle:IDesk:main.html.twig" %}
 
-{% set title = ico('clipboard', 'fugue') ~ _('Exercises') %}
+{% set title = ico('clipboard', 'fugue') ~ _('Nachschreibarbeiten') %}
 
 {% block idesk_content %}
-    {% if exercises|length > 0 %}
-        <p>{{ _('You have to do the following exercises:') }}</p>
-        <ul>
-        {% for exercise in exercises %}
-    	    <li>
-                {%- spaceless -%}
-    	           <a href="{{ path('exercise_show', {'id': exercise.id }) }}">
-    	               {{ exercise.title }} ({{ exercise.owner.lastname }})
-    	               -
-    	               {% if exercise.endDate < now() %}
-    	                   <span class="text-warning"><strong>{{ __('Deadline was %s', exercise.endDate|ldatetime) }}</strong></span>
-    	               {% else %}
-    	                   {{ __('Deadline is %s', exercise.endDate|ldatetime) }}
-    	               {% endif %}
-    	           </a>
-    	        {%- endspaceless -%}
-	       </li>
-        {% endfor %}
-    	</ul>
-    {% endif %}
+        <p>{{ _('You are dumb and i hate Symfony!!!!!!111elf') }}</p>
 {% endblock %}
 
 {% block idesk_footer %}
     <div class="clearfix">
-        <a class="btn btn-link pull-right" href="{{ path('exercise_index') }}">{{ _('Go to the exercises page') }}</a>
+        <a class="btn btn-link pull-right" href="#">{{ _('Test') }}</a>
     </div>
 {% endblock %}

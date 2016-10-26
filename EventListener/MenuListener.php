@@ -4,8 +4,6 @@ namespace IServ\NachschreibarbeitenBundle\EventListener;
 
 use IServ\CoreBundle\Event\MenuEvent;
 use IServ\CoreBundle\EventListener\MainMenuListenerInterface;
-use IServ\NachschreibarbeitenBundle\Entity\ExerciseRepository;
-use IServ\NachschreibarbeitenBundle\Security\Privilege;
 
 class MenuListener implements MainMenuListenerInterface
 {
@@ -17,7 +15,7 @@ class MenuListener implements MainMenuListenerInterface
       $menu = $event->getMenu(self::ORGANISATION);
       $menu
           ->addChild('nachschreibarbeiten', array(
-              'route' => 'manage_exercise_index',
+              'route' => 'nachschreibarbeiten_index',
               'label' => _('Nachschreibarbeiten')
           ))
           ->setExtra('orderNumber', 20)

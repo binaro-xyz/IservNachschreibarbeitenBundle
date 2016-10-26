@@ -10,7 +10,7 @@ final class Privilege
     /**
      * Users creating/modifying exercises
      */
-    const MANAGE_EXERCISES = 'PRIV_EXERCISES';
+    const ACCESS_NACHSCHREIBARBEITEN = 'PRIV_ACCESS_NACHSCHREIBARBEITEN';
 
     /**
      * Users excluded from exercises

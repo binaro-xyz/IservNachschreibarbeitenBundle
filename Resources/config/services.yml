@@ -29,9 +29,9 @@ services:
         #arguments: ["@doctrine"]
         tags:
           - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu }
-
-    iserv.exercise.idesk:
-        class: IServ\NachschreibarbeitenBundle\EventListener\IDeskListener
-        #arguments: ["@doctrine"]
-        tags:
-          - { name: kernel.event_listener, event: iserv_portal.build_idesk, method: onBuildIDesk }
+#
+#    iserv.exercise.idesk:
+#        class: IServ\NachschreibarbeitenBundle\EventListener\IDeskListener
+#        #arguments: ["@doctrine"]
+#        tags:
+#          - { name: kernel.event_listener, event: iserv_portal.build_idesk, method: onBuildIDesk }
