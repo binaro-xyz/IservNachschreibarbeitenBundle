@@ -49,7 +49,7 @@
         </div>
     {% endif %}
 
-    {% if dummy is not empty %}
-        <p>I can give you data or more! <pre>{{ dump(dummy) }}</pre></p>
+    {% if dummy is not empty and anderes_repo is not empty %}
+        <p>I can give you data or more! <pre>{{ dump(dummy) }}</pre> anderes Repo: <pre>{{ dump(anderes_repo) }}</pre></p>
     {% endif %}
 {% endblock %}
