@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/Controller/ExerciseController.php
+// src/IServ/NachschreibarbeitenBundle/Controller/ExerciseController.php
 namespace IServ\NachschreibarbeitenBundle\Controller;
 
 use IServ\NachschreibarbeitenBundle\Security\Privilege;
@@ -27,7 +27,7 @@ class NachschreibarbeitenController extends AbstractNachschreibarbeitenControlle
       if(!$this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN)) {
         throw $this->createAccessDeniedException("You are not allowed to view this page.");
       } else {
-        return array();
+        return array('dummy' => 'abc', 'exercises' => array());
       }
     }
 }

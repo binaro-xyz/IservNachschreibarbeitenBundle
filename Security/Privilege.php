@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/Security/Privilege.php
+// src/IServ/NachschreibarbeitenBundle/Security/Privilege.php
 namespace IServ\NachschreibarbeitenBundle\Security;
 
 /**

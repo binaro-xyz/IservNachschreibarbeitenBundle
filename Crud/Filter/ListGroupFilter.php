@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/Crud/Filter/ListGroupFilter.php
+// src/IServ/NachschreibarbeitenBundle/Crud/Filter/ListGroupFilter.php
 namespace IServ\NachschreibarbeitenBundle\Crud\Filter;
 
 use Doctrine\ORM\Query;

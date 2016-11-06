@@ -1,4 +1,4 @@
-{# src/IServ/ExerciseBundle/Resources/views/Exercise/show.html.twig #}
+{# src/IServ/NachschreibarbeitenBundle/Resources/views/Exercise/show.html.twig #}
 {% extends "IServExerciseBundle::base.html.twig" %}
 
 {% set expired = exercise.endDate|date_modify('+' ~ exercise.tolerance ~ ' days') <= date() %}

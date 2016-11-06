@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/EventListener/MenuListener.php
+// src/IServ/NachschreibarbeitenBundle/EventListener/MenuListener.php
 namespace IServ\NachschreibarbeitenBundle\EventListener;
 
 use IServ\CoreBundle\Event\MenuEvent;

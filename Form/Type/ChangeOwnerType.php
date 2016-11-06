@@ -1,5 +1,5 @@
 <?php
-//  src/IServ/ExerciseBundle/Form/Type/ChangeOwnerType.php
+//  src/IServ/NachschreibarbeitenBundle/Form/Type/ChangeOwnerType.php
 namespace IServ\NachschreibarbeitenBundle\Form\Type;
 
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\FormActionsType;

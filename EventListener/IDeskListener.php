@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/EventListener/IDeskListener.php
+// src/IServ/NachschreibarbeitenBundle/EventListener/IDeskListener.php
 namespace IServ\NachschreibarbeitenBundle\EventListener;
 
 use Doctrine\Bundle\DoctrineBundle\Registry as Doctrine;

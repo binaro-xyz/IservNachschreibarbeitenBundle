@@ -1,5 +1,5 @@
 <?php
-// src/Iserv/ExerciseBundle/Crud/Batch/CopyAction.php
+// src/IServ/NachschreibarbeitenBundle/Crud/Batch/CopyAction.php
 namespace IServ\NachschreibarbeitenBundle\Crud\Batch;
 
 use Doctrine\Common\Collections\ArrayCollection;

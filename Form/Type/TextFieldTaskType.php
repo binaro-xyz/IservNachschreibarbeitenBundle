@@ -1,5 +1,5 @@
 <?php
-//  src/IServ/ExerciseBundle/Form/Type/TextFieldTaskType.php
+//  src/IServ/NachschreibarbeitenBundle/Form/Type/TextFieldTaskType.php
 namespace IServ\NachschreibarbeitenBundle\Form\Type;
 
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\FormActionsType;

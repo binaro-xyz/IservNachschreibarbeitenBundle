@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/IServSkeletonBundle.php
+// src/IServ/NachschreibarbeitenBundle/IServSkeletonBundle.php
 namespace IServ\NachschreibarbeitenBundle;
 
 use IServ\NachschreibarbeitenBundle\DependencyInjection\IServNachschreibarbeitenExtension;

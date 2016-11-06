@@ -1,5 +1,5 @@
 <?php
-//// src/IServ/ExerciseBundle/Controller/ManageController.php
+//// src/IServ/NachschreibarbeitenBundle/Controller/ManageController.php
 //namespace IServ\NachschreibarbeitenBundle\Controller;
 //
 //use IServ\CoreBundle\Entity\User;

@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/Controller/AbstractExerciseController.php
+// src/IServ/NachschreibarbeitenBundle/Controller/AbstractExerciseController.php
 namespace IServ\NachschreibarbeitenBundle\Controller;
 
 use IServ\CoreBundle\Controller\PageController;

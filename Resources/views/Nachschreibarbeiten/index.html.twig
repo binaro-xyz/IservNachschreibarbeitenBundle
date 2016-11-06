@@ -1,4 +1,4 @@
-{# src/IServ/ExerciseBundle/Resources/views/Exercise/index.html.twig #}
+{# src/IServ/NachschreibarbeitenBundle/Resources/views/Exercise/index.html.twig #}
 {% extends "IServNachschreibarbeitenBundle::base.html.twig" %}
 
 {% block page_content %}
@@ -47,5 +47,9 @@
                 </div>
             </div>
         </div>
+    {% endif %}
+
+    {% if dummy is not empty %}
+        <p>I can give you data! {{ dummy }}</p>
     {% endif %}
 {% endblock %}

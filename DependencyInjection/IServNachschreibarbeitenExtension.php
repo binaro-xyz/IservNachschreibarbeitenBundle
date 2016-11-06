@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/DependencyInjection/IServSkeletonExtension.php
+// src/IServ/NachschreibarbeitenBundle/DependencyInjection/IServSkeletonExtension.php
 namespace IServ\NachschreibarbeitenBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;

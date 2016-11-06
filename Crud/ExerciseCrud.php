@@ -1,5 +1,5 @@
 <?php
-// src/IServ/ExerciseBundle/Crud/ExerciseCrud.php
+// src/IServ/NachschreibarbeitenBundle/Crud/ExerciseCrud.php
 namespace IServ\NachschreibarbeitenBundle\Crud;
 
 use Braincrafted\Bundle\BootstrapBundle\Form\Type\FormStaticControlType;
