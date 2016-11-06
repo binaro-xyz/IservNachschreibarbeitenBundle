@@ -50,6 +50,6 @@
     {% endif %}
 
     {% if dummy is not empty %}
-        <p>I can give you data! {{ dummy }}</p>
+        <p>I can give you data or more! <pre>{{ dump(dummy) }}</pre></p>
     {% endif %}
 {% endblock %}

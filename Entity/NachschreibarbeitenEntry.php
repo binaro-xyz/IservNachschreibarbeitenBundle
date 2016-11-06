@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * NachschreibarbeitenBundle:NachschreibarbeitenEntry
  *
- * @ORM\Entity(repositoryClass="IServ\NachschreibarbeitenBundle\Entity")
+ * @ORM\Entity(repositoryClass="IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenEntry")
  * @ORM\Table(name="mod_nachschreibarbeiten_entries")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -25,7 +25,7 @@ class NachschreibarbeitenEntry implements CrudInterface {
    * @ORM\ManyToOne(targetEntity="\IServ\CoreBundle\Entity\User")
    * @ORM\JoinColumn(name="created_by_act", referencedColumnName="act", onDelete="CASCADE")
    *
-   * @var User
+   * @var \IServ\CoreBundle\Entity\User
    */
   private $owner;
 
@@ -33,7 +33,7 @@ class NachschreibarbeitenEntry implements CrudInterface {
    * @ORM\ManyToOne(targetEntity="\IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate")
    * @ORM\JoinColumn(name="date_id", referencedColumnName="id", onDelete="CASCADE")
    *
-   * @var Date
+   * @var \IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate
    */
   private $date;
 

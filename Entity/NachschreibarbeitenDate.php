@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: zner0L
- * Date: 2016-10-27
- * Time: 00:30
- */
 
 namespace IServ\NachschreibarbeitenBundle\Entity;
 
@@ -16,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * NachschreibarbeitenBundle:NachschreibarbeitenDate
  *
  * @ORM\Entity(repositoryClass="IServ\NachschreibarbeitenBundle\Entity")
- * @ORM\Table(name="nachschreibarbeiten_dates")
+ * @ORM\Table(name="mod_nachschreibarbeiten_dates")
  * @ORM\HasLifecycleCallbacks()
  */
 class NachschreibarbeitenDate implements CrudInterface {
@@ -52,7 +46,7 @@ class NachschreibarbeitenDate implements CrudInterface {
   private $date;
 
   /**
-   * @ORM\Column(name="time", type="time without time zone")
+   * @ORM\Column(name="time", type="time")
    *
    * @var \DateTime
    */
