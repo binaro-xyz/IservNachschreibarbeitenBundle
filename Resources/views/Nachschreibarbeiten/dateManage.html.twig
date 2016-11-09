@@ -3,6 +3,16 @@
 
 {% block page_content %}
 
+    {% for flash_message in app.session.flashBag.get('success') %}
+        <div class="row">
+            <div class="col-md-6 col-md-push-3">
+                <div class="alert alert-success">
+                    {{ icon('ok') }} {{ flash_message }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
     <h2>{{ _('Bereits eingetragene Nachschreibtermine') }}</h2>
 
     <table class="table table-striped">
@@ -15,19 +25,25 @@
             <th></th>
         </tr></thead>
         <tbody>
-            {% for row in dates %}
-                <tr>
-                    <td>{{ row.getDate()|localizeddate('none', 'none', 'de_DE', null, 'eeee') }}</td>
-                    <td>{{ row.getDate()|localizeddate('none', 'none', 'de_DE', null, 'dd. MMMM Y') }}</td>
-                    <td>{{ row.getTime()|localizeddate('none', 'none', 'de_DE', null, 'HH:mm') }}</td>
-                    <td>{{ row.getRoom() }}</td>
-                    <td>{{ row.getTeacher() }}</td>
-                    <td><a href="{{ path('nachschreibarbeiten_dates_edit', {'id': row.getId()}) }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--pencil" src="/idesk/img/fugue/16/beaker--pencil.png"></a></td>
-                </tr>
-            {% endfor %}
+        {% for row in dates %}
+            <tr>
+                <td>{{ row.getDate()|localizeddate('none', 'none', 'de_DE', null, 'eeee') }}</td>
+                <td>{{ row.getDate()|localizeddate('none', 'none', 'de_DE', null, 'dd. MMMM Y') }}</td>
+                <td>{{ row.getTime()|localizeddate('none', 'none', 'de_DE', null, 'HH:mm') }}</td>
+                <td>{{ row.getRoom() }}</td>
+                <td>{{ row.getTeacher() }}</td>
+                <td><a href="{{ path('nachschreibarbeiten_dates_edit', {'id': row.getId()}) }}" title="{{ _('Edit') }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--pencil" src="/idesk/img/fugue/16/beaker--pencil.png"></a>
+                &nbsp;<a href="{{ path('nachschreibarbeiten_dates_delete', {'id': row.getId()}) }}" title="{{ __('Delete') }}" onclick="return confirm('{{ _('Wollen Sie wirklich löschen?') }}');"><img class="legacy-icon legacy-icon-size16" alt="beaker--minus" src="/idesk/img/fugue/16/beaker--minus.png"></a></td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 
+
     <h2>{{ _('Nachschreibtermin eintragen') }}</h2>
+
+    <div style="width: 50%;">
+        {{ form(dateForm) }}
+    </div>
 
 {% endblock %}

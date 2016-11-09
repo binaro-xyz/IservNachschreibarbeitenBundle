@@ -2,19 +2,27 @@
 // src/IServ/NachschreibarbeitenBundle/Controller/ExerciseController.php
 namespace IServ\NachschreibarbeitenBundle\Controller;
 
+use Doctrine\ORM\EntityRepository;
 use IServ\CoreBundle\Controller\PageController;
 use IServ\CoreBundle\Entity\User;
+use IServ\CoreBundle\Form\Type\UserType;
+use IServ\CoreBundle\IServCoreBundle;
+use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenEntry;
 use IServ\NachschreibarbeitenBundle\Security\Privilege;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Debug\Exception\ContextErrorException;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * @Route("nachschreibarbeiten")
@@ -64,12 +72,19 @@ class NachschreibarbeitenController extends PageController {
         if(!$this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
             throw $this->createAccessDeniedException("You are not allowed to view this page. YOU ARE NOT KING!!!");
         } else {
-            $repo = $this->getDoctrine()->getManager()->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate');
+            $manager = $this->getDoctrine()->getManager();
+            $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate');
+
+            $date = new NachschreibarbeitenDate();
+            $date->setOwner($this->getUser());
+
+            $form = $this->dateManageForm($date, $request, $manager);
 
             return array(
-                'dates' => $repo->findAll(),
+                'dates' => $repo->findAll(), // TODO: Maybe not all…
                 'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreibarbeitentermine'), 'url' => $this->generateUrl('nachschreibarbeiten_dates_manage'))),
-                'menu' => $this->createMenu('dates')
+                'menu' => $this->createMenu('dates'),
+                'dateForm' => $form->createView()
             );
         }
     }
@@ -83,10 +98,40 @@ class NachschreibarbeitenController extends PageController {
         if(!$this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
             throw $this->createAccessDeniedException("You are not allowed to view this page. YOU ARE NOT KING!!!");
         } else {
+            $manager = $this->getDoctrine()->getManager();
+            $date = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate')->find($id);
+            if(!$date) throw $this->createNotFoundException(_('Dieser Nachschreibtermin konnte nicht in der Datenbank gefunden werden.'));
+
+            $form = $this->dateManageForm($date, $request, $manager);
+
+            if($form->isSubmitted()) return $this->redirect($this->generateUrl('nachschreibarbeiten_dates_manage'));
+
             return array(
                 'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreibarbeitentermine'), 'url' => $this->generateUrl('nachschreibarbeiten_dates_manage')), array('name' => _('Nachschreibarbeitentermin bearbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_dates_edit', array('id' => $id)))),
-                'menu' => $this->createMenu('dates')
+                'menu' => $this->createMenu('dates'),
+                'dateForm' => $form->createView()
             );
+        }
+    }
+
+    /**
+     * @Route("/dates/delete/{id}", name="nachschreibarbeiten_dates_delete")
+     * @Template()
+     * @return array|RedirectResponse
+     */
+    public function dateDeleteAction(Request $request, $id) {
+        if(!$this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
+            throw $this->createAccessDeniedException("You are not allowed to view this page. YOU ARE NOT KING!!!");
+        } else {
+            $manager = $this->getDoctrine()->getManager();
+            $date = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate')->find($id);
+            if(!$date) throw $this->createNotFoundException(_('Dieser Nachschreibtermin konnte nicht in der Datenbank gefunden werden.'));
+
+            $manager->remove($date);
+            $manager->flush();
+            $this->addFlash('success', _('Der Termin wurde geslöscht!'));
+
+            return $this->redirect($this->generateUrl('nachschreibarbeiten_dates_manage'));
         }
     }
 
@@ -110,6 +155,34 @@ class NachschreibarbeitenController extends PageController {
         }
 
         return $menu;
+    }
+
+    private function dateManageForm(NachschreibarbeitenDate $date, Request $request, $manager) {
+        $form_builder = $this->createFormBuilder($date)
+            ->add('date', DateType::class, array('label' => _('Date')))
+            ->add('time', TimeType::class, array('label' => _('Time')))
+            ->add('room', TextType::class, array('label' => _('Room')))
+            ->add('teacher', UserType::class, array(
+                'label' => _('Betreuer_in'),
+                'multiple' => false,
+                'order_by' => null,
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createPrivilegeQueryBuilder(\IServ\ExamPlanBundle\Security\Privilege::CREATING_EXAMS);
+                }
+            ))
+            ->add('save', SubmitType::class, array('label' => _('Absenden')));
+
+        $form = $form_builder->getForm();
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($date);
+            $manager->flush();
+            $this->addFlash('success', _('Der Termin wurde gespeichert!'));
+        }
+
+        return $form;
     }
 
 }

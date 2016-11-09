@@ -1,0 +1,12 @@
+{# src/IServ/NachschreibarbeitenBundle/Resources/views/Nachschreibarbeiten/index.html.twig #}
+{% extends "IServNachschreibarbeitenBundle::base.html.twig" %}
+
+{% block page_content %}
+
+    <h2>{{ _('Nachschreibtermin bearbeiten') }}</h2>
+
+    <div style="width: 50%;">
+        {{ form(dateForm) }}
+    </div>
+
+{% endblock %}
