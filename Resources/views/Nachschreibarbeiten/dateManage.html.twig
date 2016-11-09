@@ -1,0 +1,33 @@
+{# src/IServ/NachschreibarbeitenBundle/Resources/views/Nachschreibarbeiten/index.html.twig #}
+{% extends "IServNachschreibarbeitenBundle::base.html.twig" %}
+
+{% block page_content %}
+
+    <h2>{{ _('Bereits eingetragene Nachschreibtermine') }}</h2>
+
+    <table class="table table-striped">
+        <thead class="thead-inverse"><tr>
+            <th>{{ _('Wochentag') }}</th>
+            <th>{{ _('Datum') }}</th>
+            <th>{{ _('Uhrzeit') }}</th>
+            <th>{{ _('Raum') }}</th>
+            <th>{{ _('Betreuer_in') }}</th>
+            <th></th>
+        </tr></thead>
+        <tbody>
+            {% for row in dates %}
+                <tr>
+                    <td>{{ row.getDate()|localizeddate('none', 'none', 'de_DE', null, 'eeee') }}</td>
+                    <td>{{ row.getDate()|localizeddate('none', 'none', 'de_DE', null, 'dd. MMMM Y') }}</td>
+                    <td>{{ row.getTime()|localizeddate('none', 'none', 'de_DE', null, 'HH:mm') }}</td>
+                    <td>{{ row.getRoom() }}</td>
+                    <td>{{ row.getTeacher() }}</td>
+                    <td><a href="{{ path('nachschreibarbeiten_dates_edit', {'id': row.getId()}) }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--pencil" src="/idesk/img/fugue/16/beaker--pencil.png"></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>{{ _('Nachschreibtermin eintragen') }}</h2>
+
+{% endblock %}

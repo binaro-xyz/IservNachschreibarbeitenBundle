@@ -1,5 +1,9 @@
 # src/IServ/SkeletonBundle/Resources/config/services.yml
 services:
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
 #    iserv.crud.object.exercise:
 #        class: IServ\ExerciseBundle\Crud\ExerciseCrud
 #        arguments: [IServ\ExerciseBundle\Entity\Exercise]

@@ -3,53 +3,8 @@
 
 {% block page_content %}
 
-    {% if exercises is not empty %}
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>{{ _('Exercise') }}</th>
-                        <th>{{ _('Start date') }}</th>
-                        <th>{{ _('Deadline') }}</th>
-                        <th>{{ _('Completed') }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for exercise in exercises %}
-                        <tr class="{% if exercise.endDate < date() %}{% if not exercise.hasSubmissions() %}warning text-warning{% else %}text-muted{% endif %}{% endif %}">
-                            <td><a href="{{ path('exercise_show', {'id': exercise.id}) }}">{{ exercise.title }}</a>
-                            </td>
-                            <td>
-                                {{ exercise.startdate|timeAgo }}
-                            </td>
-                            {% if exercise.endDate < date() and not exercise.hasSubmissions() %}
-                                <td>
-                                    <strong>{{ exercise.enddate|timeAgo }}</strong>
-                                </td>
-                            {% else %}
-                                <td>
-                                    {{ exercise.enddate|timeAgo }}
-                                </td>
-                            {% endif %}
-                            <td class="text-success text-center">{% if exercise.hasSubmissions() %}{{ icon('ok') }}{% endif %}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    {% else %}
-        <div class="row">
-            <div class="col-md-6 col-md-push-3">
-                <div class="alert alert-success">
-                    {{ icon('ok') }} {{ _('There are currently no Nachschreibarbeiten to do.') }}
-                </div>
-            </div>
-        </div>
-    {% endif %}
-
     {% if dummy is not empty and anderes_repo is not empty %}
         <p>I can give you data or more! <pre>{{ dump(dummy) }}</pre> anderes Repo: <pre>{{ dump(anderes_repo) }}</pre></p>
     {% endif %}
+
 {% endblock %}
