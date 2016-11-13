@@ -10,12 +10,14 @@ use IServ\CoreBundle\IServCoreBundle;
 use IServ\CrudBundle\Mapper\FormMapper;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenEntry;
+use IServ\NachschreibarbeitenBundle\Form\Type\NachschreibarbeitenDateType;
 use IServ\NachschreibarbeitenBundle\Security\Privilege;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
@@ -27,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @Route("nachschreibarbeiten")
  */
-class NachschreibarbeitenController extends PageController {
+class NachschreibarbeitenController extends PageController { // TODO: Logging!!
     /**
      * @Route("", name="nachschreibarbeiten_index")
      * @Template()
@@ -37,26 +39,16 @@ class NachschreibarbeitenController extends PageController {
         if(!$this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN)) {
             throw $this->createAccessDeniedException("You are not allowed to view this page.");
         } else {
-            $repo = $this->getDoctrine()->getManager()->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate');
+            $manager = $this->getDoctrine()->getManager();
+            $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
 
-//            $nd = new NachschreibarbeitenEntry();
-//            $nd->setDate($repo->find(1));
-//            $nd->setOwner($this->getUser());
-//            $nd->setAdditionalMaterial('');
-//            $nd->setClass('05Gpi');
-//            $nd->setDuration(3141);
-//            $nd->setStudent($this->getUser());
-//            $nd->setSubject('Pi');
-//            $nd->setTeacher($this->getUser());
-//
-//
-//            $this->getDoctrine()->getManager()->persist($nd);
-//            $this->getDoctrine()->getManager()->flush();
+            $entry = new NachschreibarbeitenEntry();
 
-            $anderes_repo = $this->getDoctrine()->getManager()->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
+            $form = $this->entryManageForm($entry, $request, $manager);
+
             return array(
-                'dummy' => $repo->findAll(),
-                'anderes_repo' => $anderes_repo->findAll(),
+                'entries' => $repo->findAll(),
+                'entryForm' => $form->createView(),
                 'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index'))),
                 'menu' => $this->createMenu('index')
             );
@@ -75,13 +67,22 @@ class NachschreibarbeitenController extends PageController {
             $manager = $this->getDoctrine()->getManager();
             $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate');
 
+            $query = $repo->createQueryBuilder('d')
+                ->where('d.date >= CURRENT_DATE()')
+                ->orderby('d.date', 'ASC')
+                ->setMaxResults(10)
+                ->getQuery();
+
             $date = new NachschreibarbeitenDate();
             $date->setOwner($this->getUser());
+            $date->setDate(new \DateTime('next friday'));
+            $date->setTime(new \DateTime('14:00'));
+            $date->setRoom('151');
 
             $form = $this->dateManageForm($date, $request, $manager);
 
             return array(
-                'dates' => $repo->findAll(), // TODO: Maybe not all…
+                'dates' => $query->getResult(),
                 'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreibarbeitentermine'), 'url' => $this->generateUrl('nachschreibarbeiten_dates_manage'))),
                 'menu' => $this->createMenu('dates'),
                 'dateForm' => $form->createView()
@@ -129,7 +130,7 @@ class NachschreibarbeitenController extends PageController {
 
             $manager->remove($date);
             $manager->flush();
-            $this->addFlash('success', _('Der Termin wurde geslöscht!'));
+            $this->get('iserv.flash')->success(_('Der Termin wurde gelöscht!'));
 
             return $this->redirect($this->generateUrl('nachschreibarbeiten_dates_manage'));
         }
@@ -179,7 +180,45 @@ class NachschreibarbeitenController extends PageController {
         if($form->isSubmitted() && $form->isValid()) {
             $manager->persist($date);
             $manager->flush();
-            $this->addFlash('success', _('Der Termin wurde gespeichert!'));
+            $this->get('iserv.flash')->success(_('Der Termin wurde gespeichert!'));
+        }
+
+        return $form;
+    }
+
+    private function entryManageForm(NachschreibarbeitenEntry $entry, Request $request, $manager) {
+        $form_builder = $this->createFormBuilder($entry)
+            ->add('date', NachschreibarbeitenDateType::class, array('label' => _('Date')))
+            ->add('student', UserType::class, array(
+                'label' => _('Schüler_in'),
+                'multiple' => false,
+                'order_by' => null,
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createPrivilegeQueryBuilder(\IServ\ExamPlanBundle\Security\Privilege::DOING_EXAMS);
+                }
+            ))
+            ->add('class', TextType::class, array('label' => _('Klasse')))
+            ->add('subject', TextType::class, array('label' => _('Fach')))
+            ->add('additional_material', TextType::class, array('label' => _('Zusatzmaterialien')))
+            ->add('duration', NumberType::class, array('label' => _('Dauer [Minuten]')))
+            ->add('teacher', UserType::class, array(
+                'label' => _('Lehrkraft'),
+                'multiple' => false,
+                'order_by' => null,
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createPrivilegeQueryBuilder(\IServ\ExamPlanBundle\Security\Privilege::CREATING_EXAMS);
+                }
+            ))
+            ->add('save', SubmitType::class, array('label' => _('Absenden')));
+
+        $form = $form_builder->getForm();
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $manager->persist($entry);
+            $manager->flush();
+            $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gespeichert!'));
         }
 
         return $form;

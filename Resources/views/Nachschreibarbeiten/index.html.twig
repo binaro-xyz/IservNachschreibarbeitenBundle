@@ -3,8 +3,38 @@
 
 {% block page_content %}
 
-    {% if dummy is not empty and anderes_repo is not empty %}
-        <p>I can give you data or more! <pre>{{ dump(dummy) }}</pre> anderes Repo: <pre>{{ dump(anderes_repo) }}</pre></p>
-    {% endif %}
+
+    <h2>{{ _('Nachschreiber_in eintragen') }}</h2>
+
+    <div style="width: 50%;">
+        {{ form(entryForm) }}
+    </div>
+
+    <h2>{{ _('Nachschreiber_innen') }}</h2>
+
+    <table class="table table-striped"> {# TODO: Date sorting#}
+        <thead class="thead-inverse"><tr>
+            <th>{{ _('Schüler_in') }}</th>
+            <th>{{ _('Klasse') }}</th>
+            <th>{{ _('Fach') }}</th>
+            <th>{{ _('Zusatzmaterialien') }}</th>
+            <th>{{ _('Dauer [Minuten]') }}</th>
+            <th>{{ _('Lehrkraft') }}</th>
+            <th></th>
+        </tr></thead>
+        <tbody>
+        {% for row in entries %}
+            <tr>
+                <td>{{ row.getStudent() }}</td>
+                <td>{{ row.getClass() }}</td>
+                <td>{{ row.getSubject() }}</td>
+                <td>{{ row.getAdditionalMaterial() }}</td>
+                <td>{{ row.getDuration() }}</td>
+                <td>{{ row.getTeacher() }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}

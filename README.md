@@ -14,7 +14,7 @@ description     Administer the Nachschreibarbeiten module
 assign          admins
 ```
 
-Also, this has to be added to the old version's `usr/share/iserv/db/mod_iserv-nachschreibarbeiten`:
+Also, this has to be added to the old version's `usr/share/iserv/db/mod_iserv-nachschreibarbeiten.sql`:
 ```
 -- Iserv 3
 GRANT ALL ON mod_nachschreibarbeiten_dates, mod_nachschreibarbeiten_entries TO symfony;
