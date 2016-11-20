@@ -66,7 +66,7 @@ class NachschreibarbeitenDate implements CrudInterface {
    * @return string
    */
   public function __toString() {
-    return $this->date->format('l, Y-m-d H:i');
+    return $this->date->format('Y-m-d') . ' ' . $this->time->format('H:i');
   }
 
   /**

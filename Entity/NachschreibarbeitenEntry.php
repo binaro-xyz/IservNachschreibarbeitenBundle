@@ -87,9 +87,7 @@ class NachschreibarbeitenEntry implements CrudInterface {
      * @return string
      */
     public function __toString() {
-        $formatter = new \IntlDateFormatter('de_DE', IntlDateFormatter::SHORT, IntlDateFormatter::SHORT);
-        $formatter->setPattern('eeee, dd. MMMM Y HH:mm');
-        return $formatter->format($this->date);
+        return $this->student . ' am ' . $this->date;
     }
 
     /**

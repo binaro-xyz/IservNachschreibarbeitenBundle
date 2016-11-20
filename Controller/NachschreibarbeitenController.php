@@ -131,6 +131,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
             $manager->remove($date);
             $manager->flush();
             $this->get('iserv.flash')->success(_('Der Termin wurde gelöscht!'));
+            $this->get('iserv.logger')->write('Ein Datum wurde gelöscht: ' . $date, null, 'Nachschreibarbeiten');
 
             return $this->redirect($this->generateUrl('nachschreibarbeiten_dates_manage'));
         }
@@ -180,6 +181,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
         if($form->isSubmitted() && $form->isValid()) {
             $manager->persist($date);
             $manager->flush();
+            $this->get('iserv.logger')->write('Ein neuer Termin wurde hinzugefügt: ' . $date, null, 'Nachschreibarbeiten');
             $this->get('iserv.flash')->success(_('Der Termin wurde gespeichert!'));
         }
 
@@ -218,6 +220,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
         if($form->isSubmitted() && $form->isValid()) {
             $manager->persist($entry);
             $manager->flush();
+            $this->get('iserv.logger')->write('Eine neue Nachschreiber_in wurde hinzugefügt: ' . $entry, null, 'Nachschreibarbeiten');
             $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gespeichert!'));
         }
 
