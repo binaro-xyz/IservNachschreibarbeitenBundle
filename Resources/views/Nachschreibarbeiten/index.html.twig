@@ -12,34 +12,38 @@
 
     <h2>{{ _('Nachschreiber_innen') }}</h2>
 
-    <table class="table table-striped"> {# TODO: Date sorting#}
-        <thead class="thead-inverse"><tr>
-            <th>{{ _('Schüler_in') }}</th>
-            <th>{{ _('Klasse') }}</th>
-            <th>{{ _('Fach') }}</th>
-            <th>{{ _('Zusatzmaterialien') }}</th>
-            <th>{{ _('Dauer [Minuten]') }}</th>
-            <th>{{ _('Lehrkraft') }}</th>
-            <th></th>
-        </tr></thead>
-        <tbody>
-        {% for row in entries %}
-            <tr>
-                <td>{{ row.getStudent() }}</td>
-                <td>{{ row.getClass() }}</td>
-                <td>{{ row.getSubject() }}</td>
-                <td>{{ row.getAdditionalMaterial() }}</td>
-                <td>{{ row.getDuration() }}</td>
-                <td>{{ row.getTeacher() }}</td>
-                <td>
-                    {% if row.getOwner() == current_user or isKing %}
-                        <a href="{{ path('nachschreibarbeiten_entry_edit', {'id': row.getId()}) }}" title="{{ _('Edit') }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--pencil" src="/idesk/img/fugue/16/beaker--pencil.png"></a>&nbsp
-                        <a href="{{ path('nachschreibarbeiten_entry_delete', {'id': row.getId()}) }}" title="{{ __('Delete') }}" onclick="return confirm('{{ _('Wollen Sie wirklich löschen?') }}');"><img class="legacy-icon legacy-icon-size16" alt="beaker--minus" src="/idesk/img/fugue/16/beaker--minus.png"></a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% for date in dates %}
+        <h3>{{ date.getDate()|localizeddate('none', 'none', 'de_DE', null, 'eeee, dd. MMMM Y') }} {{ date.getTime()|localizeddate('none', 'none', 'de_DE', null, 'HH:mm') }}</h3>
+        <p>{{ _('Raum') }}: {{ date.getRoom() }}, {{ _('Betreuer_in') }}: {{ date.getTeacher() }} </p>
+        <table class="table table-striped">
+            <thead class="thead-inverse"><tr>
+                <th>{{ _('Schüler_in') }}</th>
+                <th>{{ _('Klasse') }}</th>
+                <th>{{ _('Fach') }}</th>
+                <th>{{ _('Zusatzmaterialien') }}</th>
+                <th>{{ _('Dauer [Minuten]') }}</th>
+                <th>{{ _('Lehrkraft') }}</th>
+                <th></th>
+            </tr></thead>
+            <tbody>
+            {% for row in entries[date.getId()] %}
+                <tr>
+                    <td>{{ row.getStudent() }}</td>
+                    <td>{{ row.getClass() }}</td>
+                    <td>{{ row.getSubject() }}</td>
+                    <td>{{ row.getAdditionalMaterial() }}</td>
+                    <td>{{ row.getDuration() }}</td>
+                    <td>{{ row.getTeacher() }}</td>
+                    <td>
+                        {% if row.getOwner() == current_user or isKing %}
+                            <a href="{{ path('nachschreibarbeiten_entry_edit', {'id': row.getId()}) }}" title="{{ _('Edit') }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--pencil" src="/idesk/img/fugue/16/beaker--pencil.png"></a>&nbsp
+                            <a href="{{ path('nachschreibarbeiten_entry_delete', {'id': row.getId()}) }}" title="{{ __('Delete') }}" onclick="return confirm('{{ _('Wollen Sie wirklich löschen?') }}');"><img class="legacy-icon legacy-icon-size16" alt="beaker--minus" src="/idesk/img/fugue/16/beaker--minus.png"></a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
 
 {% endblock %}

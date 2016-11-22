@@ -40,15 +40,30 @@ class NachschreibarbeitenController extends PageController {
             $manager = $this->getDoctrine()->getManager();
             $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
 
+            $query = $repo->createQueryBuilder('e')
+                ->join('e.date', 'd', 'WITH', 'd.date >= CURRENT_DATE()')
+                ->orderBy('d.date', 'ASC')
+                ->getQuery();
+
+            $entries = array();
+            $dates = array();
+
+            foreach($query->getResult() as $result) {
+                $entries[$result->getDate()->getId()][] = $result;
+                $dates[$result->getDate()->getId()] = $result->getDate();
+            }
+
             $entry = new NachschreibarbeitenEntry();
             $entry->setOwner($this->getUser());
             $entry->setDuration(45);
             $entry->setSubject(_('Physik'));
+            if($this->isGranted(\IServ\ExamPlanBundle\Security\Privilege::CREATING_EXAMS)) $entry->setTeacher($this->getUser());
 
             $form = $this->entryManageForm($entry, $request, $manager);
 
             return array(
-                'entries' => $repo->findAll(),
+                'entries' => $entries,
+                'dates' => $dates,
                 'entryForm' => $form->createView(),
                 'isKing' => $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN),
                 'current_user' => $this->getUser(),
