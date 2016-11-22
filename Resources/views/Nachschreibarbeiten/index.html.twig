@@ -6,7 +6,7 @@
 
     <h2>{{ _('Nachschreiber_in eintragen') }}</h2>
 
-    <div style="width: 50%;">
+    <div style="width: 60%;">
         {{ form(entryForm) }}
     </div>
 
@@ -31,7 +31,12 @@
                 <td>{{ row.getAdditionalMaterial() }}</td>
                 <td>{{ row.getDuration() }}</td>
                 <td>{{ row.getTeacher() }}</td>
-                <td></td>
+                <td>
+                    {% if row.getOwner() == current_user or isKing %}
+                        <a href="{{ path('nachschreibarbeiten_entry_edit', {'id': row.getId()}) }}" title="{{ _('Edit') }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--pencil" src="/idesk/img/fugue/16/beaker--pencil.png"></a>&nbsp
+                        <a href="{{ path('nachschreibarbeiten_entry_delete', {'id': row.getId()}) }}" title="{{ __('Delete') }}" onclick="return confirm('{{ _('Wollen Sie wirklich löschen?') }}');"><img class="legacy-icon legacy-icon-size16" alt="beaker--minus" src="/idesk/img/fugue/16/beaker--minus.png"></a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
         </tbody>

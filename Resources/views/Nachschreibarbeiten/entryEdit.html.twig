@@ -1,0 +1,12 @@
+{# src/IServ/NachschreibarbeitenBundle/Resources/views/Nachschreibarbeiten/entryEdit.html.twig #}
+{% extends "IServNachschreibarbeitenBundle::base.html.twig" %}
+
+{% block page_content %}
+
+    <h2>{{ _('Nachschreiber_in bearbeiten') }}</h2>
+
+    <div style="width: 50%;">
+        {{ form(entryForm) }}
+    </div>
+
+{% endblock %}

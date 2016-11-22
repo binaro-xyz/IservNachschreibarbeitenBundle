@@ -29,29 +29,34 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @Route("nachschreibarbeiten")
  */
-class NachschreibarbeitenController extends PageController { // TODO: Logging!!
+class NachschreibarbeitenController extends PageController {
     /**
      * @Route("", name="nachschreibarbeiten_index")
      * @Template()
      * @return array|RedirectResponse
      */
     public function indexAction(Request $request, $path) {
-        if(!$this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN)) {
-            throw $this->createAccessDeniedException("You are not allowed to view this page.");
-        } else {
+        if($this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN) || $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
             $manager = $this->getDoctrine()->getManager();
             $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
 
             $entry = new NachschreibarbeitenEntry();
+            $entry->setOwner($this->getUser());
+            $entry->setDuration(45);
+            $entry->setSubject(_('Physik'));
 
             $form = $this->entryManageForm($entry, $request, $manager);
 
             return array(
                 'entries' => $repo->findAll(),
                 'entryForm' => $form->createView(),
+                'isKing' => $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN),
+                'current_user' => $this->getUser(),
                 'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index'))),
                 'menu' => $this->createMenu('index')
             );
+        } else {
+            throw $this->createAccessDeniedException('You are not allowed to view this page.');
         }
     }
 
@@ -61,9 +66,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
      * @return array|RedirectResponse
      */
     public function dateManageAction(Request $request) {
-        if(!$this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
-            throw $this->createAccessDeniedException("You are not allowed to view this page. YOU ARE NOT KING!!!");
-        } else {
+        if($this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
             $manager = $this->getDoctrine()->getManager();
             $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate');
 
@@ -87,6 +90,8 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
                 'menu' => $this->createMenu('dates'),
                 'dateForm' => $form->createView()
             );
+        } else {
+            throw $this->createAccessDeniedException("You are not allowed to view this page. YOU ARE NOT KING!!!");
         }
     }
 
@@ -96,9 +101,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
      * @return array|RedirectResponse
      */
     public function dateEditAction(Request $request, $id) {
-        if(!$this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
-            throw $this->createAccessDeniedException("You are not allowed to view this page. YOU ARE NOT KING!!!");
-        } else {
+        if($this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
             $manager = $this->getDoctrine()->getManager();
             $date = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate')->find($id);
             if(!$date) throw $this->createNotFoundException(_('Dieser Nachschreibtermin konnte nicht in der Datenbank gefunden werden.'));
@@ -112,6 +115,8 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
                 'menu' => $this->createMenu('dates'),
                 'dateForm' => $form->createView()
             );
+        } else {
+            throw $this->createAccessDeniedException('You are not allowed to view this page. YOU ARE NOT KING!!!');
         }
     }
 
@@ -121,9 +126,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
      * @return array|RedirectResponse
      */
     public function dateDeleteAction(Request $request, $id) {
-        if(!$this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
-            throw $this->createAccessDeniedException("You are not allowed to view this page. YOU ARE NOT KING!!!");
-        } else {
+        if($this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
             $manager = $this->getDoctrine()->getManager();
             $date = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenDate')->find($id);
             if(!$date) throw $this->createNotFoundException(_('Dieser Nachschreibtermin konnte nicht in der Datenbank gefunden werden.'));
@@ -134,6 +137,64 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
             $this->get('iserv.logger')->write('Ein Datum wurde gelöscht: ' . $date, null, 'Nachschreibarbeiten');
 
             return $this->redirect($this->generateUrl('nachschreibarbeiten_dates_manage'));
+        } else {
+            throw $this->createAccessDeniedException('You are not allowed to view this page. YOU ARE NOT KING!!!');
+        }
+    }
+
+    /**
+     * @Route("/entry/edit/{id}", name="nachschreibarbeiten_entry_edit")
+     * @Template()
+     * @return array|RedirectResponse
+     */
+    public function entryEditAction(Request $request, $id) {
+        if($this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN) || $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
+            $manager = $this->getDoctrine()->getManager();
+            $entry = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry')->find($id);
+            if(!$entry) throw $this->createNotFoundException(_('Diese Nachschreiber_in konnte nicht in der Datenbank gefunden werden.'));
+
+            if($this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN) || $entry->getOwner() === $this->getUser()) {
+                $form = $this->entryManageForm($entry, $request, $manager);
+
+                if($form->isSubmitted()) return $this->redirect($this->generateUrl('nachschreibarbeiten_index'));
+
+                return array(
+                    'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreiber_innen'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreiber_in bearbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_entry_edit', array('id' => $id)))),
+                    'menu' => $this->createMenu('index'),
+                    'entryForm' => $form->createView()
+                );
+            } else {
+                $this->createAccessDeniedException('You are not allowed to edit this entry.');
+            }
+
+        } else {
+            throw $this->createAccessDeniedException('You are not allowed to view this page. YOU ARE NOT KING!!!');
+        }
+    }
+
+    /**
+     * @Route("/entry/delete/{id}", name="nachschreibarbeiten_entry_delete")
+     * @Template()
+     * @return RedirectResponse
+     */
+    public function entryDeleteAction(Request $request, $id) {
+        if($this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN) || $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
+            $manager = $this->getDoctrine()->getManager();
+            $entry = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry')->find($id);
+            if(!$entry) throw $this->createNotFoundException(_('Diese Nachschreiber_in wurde nicht in der Datenbank gefunden.'));
+
+            if($this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN) || $entry->getOwner() === $this->getUser()) {
+                $manager->remove($entry);
+                $manager->flush();
+                $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gelöscht!'));
+                $this->get('iserv.logger')->write('Eine Nachschreiber_in wurde gelöscht: ' . $entry, null, 'Nachschreibarbeiten');
+             } else {
+                throw $this->createAccessDeniedException('You are not allowed to delete this entry.');
+            }
+
+            return $this->redirect($this->generateUrl('nachschreibarbeiten_index'));
+        } else {
+            throw $this->createAccessDeniedException('You are not allowed to view this page.');
         }
     }
 
@@ -181,7 +242,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
         if($form->isSubmitted() && $form->isValid()) {
             $manager->persist($date);
             $manager->flush();
-            $this->get('iserv.logger')->write('Ein neuer Termin wurde hinzugefügt: ' . $date, null, 'Nachschreibarbeiten');
+            $this->get('iserv.logger')->write('Ein Termin wurde erstellt/bearbeitet: ' . $date, null, 'Nachschreibarbeiten');
             $this->get('iserv.flash')->success(_('Der Termin wurde gespeichert!'));
         }
 
@@ -220,7 +281,7 @@ class NachschreibarbeitenController extends PageController { // TODO: Logging!!
         if($form->isSubmitted() && $form->isValid()) {
             $manager->persist($entry);
             $manager->flush();
-            $this->get('iserv.logger')->write('Eine neue Nachschreiber_in wurde hinzugefügt: ' . $entry, null, 'Nachschreibarbeiten');
+            $this->get('iserv.logger')->write('Eine Nachschreiber_in wurde erstellt/bearbeitet: ' . $entry, null, 'Nachschreibarbeiten');
             $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gespeichert!'));
         }
 
