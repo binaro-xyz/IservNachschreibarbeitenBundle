@@ -3,14 +3,8 @@
 
 {% block page_content %}
 
-
-    <h2>{{ _('Nachschreiber_in eintragen') }}</h2>
-
-    <div style="width: 60%;">
-        {{ form(entryForm) }}
-    </div>
-
     <h2>{{ _('Nachschreiber_innen') }}</h2>
+    <a class="btn btn-link pull-right" href="{{ path('nachschreibarbeiten_entry_create') }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--plus" src="/idesk/img/fugue/16/beaker--plus.png">{{ _('Nachschreiber_in eintragen') }}</a>
 
     {% for date in dates %}
         <h3>{{ date.getDate()|localizeddate('none', 'none', 'de_DE', null, 'eeee, dd. MMMM Y') }} {{ date.getTime()|localizeddate('none', 'none', 'de_DE', null, 'HH:mm') }}</h3>

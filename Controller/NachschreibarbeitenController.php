@@ -53,18 +53,9 @@ class NachschreibarbeitenController extends PageController {
                 $dates[$result->getDate()->getId()] = $result->getDate();
             }
 
-            $entry = new NachschreibarbeitenEntry();
-            $entry->setOwner($this->getUser());
-            $entry->setDuration(45);
-            $entry->setSubject(_('Physik'));
-            if($this->isGranted(\IServ\ExamPlanBundle\Security\Privilege::CREATING_EXAMS)) $entry->setTeacher($this->getUser());
-
-            $form = $this->entryManageForm($entry, $request, $manager);
-
             return array(
                 'entries' => $entries,
                 'dates' => $dates,
-                'entryForm' => $form->createView(),
                 'isKing' => $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN),
                 'current_user' => $this->getUser(),
                 'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index'))),
@@ -158,6 +149,34 @@ class NachschreibarbeitenController extends PageController {
     }
 
     /**
+     * @Route("/entry/create", name="nachschreibarbeiten_entry_create")
+     * @Template()
+     * @return array|RedirectResponse
+     */
+    public function entryCreateAction(Request $request) {
+        if($this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN) || $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
+            $entry = new NachschreibarbeitenEntry();
+            $entry->setOwner($this->getUser());
+            $entry->setDuration(45);
+            $entry->setSubject(_('Physik'));
+            if($this->isGranted(\IServ\ExamPlanBundle\Security\Privilege::CREATING_EXAMS)) $entry->setTeacher($this->getUser());
+
+            $form = $this->entryManageForm($entry, $request, $this->getDoctrine()->getManager());
+
+            if($form->isSubmitted()) return $this->redirect($this->generateUrl('nachschreibarbeiten_index'));
+
+            return array(
+                'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreiber_in eintragen'), 'url' => $this->generateUrl('nachschreibarbeiten_entry_create'))),
+                'menu' => $this->createMenu('index'),
+                'entryForm' => $form->createView()
+            );
+
+        } else {
+            throw $this->createAccessDeniedException('You are not allowed to view this page. YOU ARE NOT KING!!!');
+        }
+    }
+
+    /**
      * @Route("/entry/edit/{id}", name="nachschreibarbeiten_entry_edit")
      * @Template()
      * @return array|RedirectResponse
@@ -174,7 +193,7 @@ class NachschreibarbeitenController extends PageController {
                 if($form->isSubmitted()) return $this->redirect($this->generateUrl('nachschreibarbeiten_index'));
 
                 return array(
-                    'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreiber_innen'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreiber_in bearbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_entry_edit', array('id' => $id)))),
+                    'breadcrumbs' => array(array('name' => _('Nachschreibarbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_index')), array('name' => _('Nachschreiber_in bearbeiten'), 'url' => $this->generateUrl('nachschreibarbeiten_entry_edit', array('id' => $id)))),
                     'menu' => $this->createMenu('index'),
                     'entryForm' => $form->createView()
                 );

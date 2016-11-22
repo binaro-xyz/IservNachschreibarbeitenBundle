@@ -7,6 +7,7 @@
 
     <div style="width: 50%;">
         {{ form(dateForm) }}
+        <a class="btn btn-default" title="{{ _('Zurück') }}" href="{{ path('nachschreibarbeiten_dates_manage') }}">{{ icon('chevron-left') }}&nbsp;{{ _('Zurück') }}</a>
     </div>
 
 {% endblock %}
