@@ -40,6 +40,8 @@ class NachschreibarbeitenController extends PageController {
             $manager = $this->getDoctrine()->getManager();
             $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
 
+            $infotext = $this->get('iserv.config')->get('NachschreibarbeitenInfotext');
+
             $query = $repo->createQueryBuilder('e')
                 ->join('e.date', 'd', 'WITH', 'd.date >= CURRENT_DATE()')
                 ->orderBy('d.date', 'ASC')
@@ -54,6 +56,7 @@ class NachschreibarbeitenController extends PageController {
             }
 
             return array(
+                'infotext' => $infotext,
                 'entries' => $entries,
                 'dates' => $dates,
                 'isKing' => $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN),

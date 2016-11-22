@@ -3,6 +3,10 @@
 
 {% block page_content %}
 
+    {% if infotext is not empty %}
+        <p style="background-color: #fff; padding: 10px; border: 1px solid #eee">{{ infotext }}</p>
+    {% endif %}
+
     <h2>{{ _('Nachschreiber_innen') }}</h2>
     <a class="btn btn-link pull-right" href="{{ path('nachschreibarbeiten_entry_create') }}"><img class="legacy-icon legacy-icon-size16" alt="beaker--plus" src="/idesk/img/fugue/16/beaker--plus.png">{{ _('Nachschreiber_in eintragen') }}</a>
 
