@@ -70,6 +70,38 @@ class NachschreibarbeitenController extends PageController {
     }
 
     /**
+     * @Route("/entry/print", name="nachschreibarbeiten_entry_print")
+     * @Template()
+     * @return array|RedirectResponse
+     */
+    public function entryPrintAction(Request $request) {
+        if($this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN) || $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
+            $manager = $this->getDoctrine()->getManager();
+            $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
+
+            $query = $repo->createQueryBuilder('e')
+                ->join('e.date', 'd', 'WITH', 'd.date >= CURRENT_DATE()')
+                ->orderBy('d.date', 'ASC')
+                ->getQuery();
+
+            $entries = array();
+            $dates = array();
+
+            foreach($query->getResult() as $result) {
+                $entries[$result->getDate()->getId()][] = $result;
+                $dates[$result->getDate()->getId()] = $result->getDate();
+            }
+
+            return array(
+                'entries' => $entries,
+                'dates' => $dates
+            );
+        } else {
+            throw $this->createAccessDeniedException('You are not allowed to view this page.');
+        }
+    }
+
+    /**
      * @Route("/dates", name="nachschreibarbeiten_dates_manage")
      * @Template()
      * @return array|RedirectResponse

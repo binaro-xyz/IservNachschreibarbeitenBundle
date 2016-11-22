@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <style>
+            * { font-family: sans-serif;  font-size: 10pt; }
+            h1 { font-size: 18pt; }
+            h2 { font-size: 14pt; }
+
+            hr { margin: 0; padding: 0; border: 1px solid #444; }
+
+            td, th {
+                margin: 0;
+                border: 1px solid #000;
+                text-align: left;
+                padding: 5px;
+            }
+        </style>
+    </head>
+    <body onload="self.print();">
+    <h1>{{ _('Nachschreiber_innen') }} </h1>
+    <p>{{ _('Ausdruck vom') }} {{ 'now'|localizeddate('none', 'none', 'de_DE', null, 'eeee, dd. MMMM Y, HH:mm') }}</p>
+    <hr>
+    {% for date in dates %}
+        <h2>{{ date.getDate()|localizeddate('none', 'none', 'de_DE', null, 'eeee, dd. MMMM Y') }}, {{ date.getTime()|localizeddate('none', 'none', 'de_DE', null, 'HH:mm') }}</h2>
+        <p>{{ _('Raum') }}: {{ date.getRoom() }}, {{ _('Betreuer_in') }}: {{ date.getTeacher() }} </p>
+        <table class="table table-striped" cellspacing=0>
+            <thead class="thead-inverse"><tr>
+                <th>{{ _('Schüler_in') }}</th>
+                <th>{{ _('Klasse') }}</th>
+                <th>{{ _('Fach') }}</th>
+                <th>{{ _('Zusatzmaterialien') }}</th>
+                <th>{{ _('Dauer [Minuten]') }}</th>
+                <th>{{ _('Lehrkraft') }}</th>
+            </tr></thead>
+            <tbody>
+            {% for row in entries[date.getId()] %}
+                <tr>
+                    <td>{{ row.getStudent() }}</td>
+                    <td>{{ row.getClass() }}</td>
+                    <td>{{ row.getSubject() }}</td>
+                    <td>{{ row.getAdditionalMaterial() }}</td>
+                    <td>{{ row.getDuration() }}</td>
+                    <td>{{ row.getTeacher() }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+    </body>
+</html>
