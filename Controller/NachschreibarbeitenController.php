@@ -291,11 +291,12 @@ class NachschreibarbeitenController extends PageController {
 
     private function dateManageForm(NachschreibarbeitenDate $date, Request $request, $manager) {
         $form_builder = $this->createFormBuilder($date)
-            ->add('date', DateType::class, array('label' => _('Date')))
-            ->add('time', TimeType::class, array('label' => _('Time')))
-            ->add('room', TextType::class, array('label' => _('Room')))
+            ->add('date', DateType::class, array('label' => _('Date'), 'required' => true))
+            ->add('time', TimeType::class, array('label' => _('Time'), 'required' => true))
+            ->add('room', TextType::class, array('label' => _('Room'), 'required' => true))
             ->add('teacher', UserType::class, array(
                 'label' => _('Betreuer_in'),
+                'required' => true,
                 'multiple' => false,
                 'order_by' => null,
                 'query_builder' => function(EntityRepository $er) {
@@ -320,21 +321,23 @@ class NachschreibarbeitenController extends PageController {
 
     private function entryManageForm(NachschreibarbeitenEntry $entry, Request $request, $manager) {
         $form_builder = $this->createFormBuilder($entry)
-            ->add('date', NachschreibarbeitenDateType::class, array('label' => _('Date')))
+            ->add('date', NachschreibarbeitenDateType::class, array('label' => _('Date'), 'required' => true))
             ->add('student', UserType::class, array(
                 'label' => _('Schüler_in'),
+                'required' => true,
                 'multiple' => false,
                 'order_by' => null,
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createPrivilegeQueryBuilder(\IServ\ExamPlanBundle\Security\Privilege::DOING_EXAMS);
                 }
             ))
-            ->add('class', TextType::class, array('label' => _('Klasse')))
-            ->add('subject', TextType::class, array('label' => _('Fach')))
-            ->add('additional_material', TextType::class, array('label' => _('Zusatzmaterialien')))
-            ->add('duration', NumberType::class, array('label' => _('Dauer [Minuten]')))
+            ->add('class', TextType::class, array('label' => _('Klasse'), 'required' => true))
+            ->add('subject', TextType::class, array('label' => _('Fach'), 'required' => true))
+            ->add('additional_material', TextType::class, array('label' => _('Zusatzmaterialien'), 'required' => false))
+            ->add('duration', NumberType::class, array('label' => _('Dauer [Minuten]'), 'required' => true))
             ->add('teacher', UserType::class, array(
                 'label' => _('Lehrkraft'),
+                'required' => true,
                 'multiple' => false,
                 'order_by' => null,
                 'query_builder' => function(EntityRepository $er) {
