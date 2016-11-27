@@ -1,14 +1,13 @@
 {# src/IServ/NachschreibarbeitenBundle/Resources/views/idesk.html.twig #}
-{% extends "IServCoreBundle:IDesk:main.html.twig" %}
+{% extends "IServCoreBundle:Dashboard:sidebar.html.twig" %}
 
-{% set title = ico('clipboard', 'fugue') ~ _('Nachschreibarbeiten') %}
+{% set title = ico('molecule', 'fugue') ~ _('Nachschreibarbeiten') %}
 
-{% block idesk_content %}
-        <p>{{ _('You are dumb and i hate Symfony!!!!!!111elf') }}</p>
-{% endblock %}
-
-{% block idesk_footer %}
-    <div class="clearfix">
-        <a class="btn btn-link pull-right" href="#">{{ _('Test') }}</a>
-    </div>
+{% block dashboard_content %}
+        <p>{{ _('Für Sie wurden folgende Nachschreibarbeiten eingetragen:') }}</p>
+        <ul>
+            {% for entry in entries %}
+                <li>{{ entry.getSubject() }} {{ _('am') }} {{ entry.getDate() }} {{ _('betreut von') }} {{ entry.getTeacher() }}</li>
+            {% endfor %}
+        </ul>
 {% endblock %}
