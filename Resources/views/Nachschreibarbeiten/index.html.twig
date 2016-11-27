@@ -4,7 +4,7 @@
 {% block page_content %}
 
     {% if infotext is not empty %}
-        <p style="background-color: #fff; padding: 10px; border: 1px solid #eee">{{ infotext }}</p>
+        <p style="background-color: #fff; padding: 10px; border: 1px solid #eee">{{ infotext|raw }}</p>
     {% endif %}
 
     <h2>{{ _('Nachschreiber_innen') }}</h2>

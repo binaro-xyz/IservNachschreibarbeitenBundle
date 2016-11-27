@@ -40,7 +40,7 @@ class NachschreibarbeitenController extends PageController {
             $manager = $this->getDoctrine()->getManager();
             $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
 
-            $infotext = $this->get('iserv.config')->get('NachschreibarbeitenInfotext');
+            $infotext = html_entity_decode($this->get('iserv.config')->get('NachschreibarbeitenInfotext'));
 
             $query = $repo->createQueryBuilder('e')
                 ->join('e.date', 'd', 'WITH', 'd.date >= CURRENT_DATE()')
