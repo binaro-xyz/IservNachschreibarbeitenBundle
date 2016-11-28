@@ -253,10 +253,13 @@ class NachschreibarbeitenController extends PageController {
             if(!$entry) throw $this->createNotFoundException(_('Diese Nachschreiber_in wurde nicht in der Datenbank gefunden.'));
 
             if($this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN) || $entry->getOwner() === $this->getUser()) {
+                $id = $entry->getId();
                 $manager->remove($entry);
                 $manager->flush();
                 $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gelöscht!'));
                 $this->get('iserv.logger')->write('Eine Nachschreiber_in wurde gelöscht: ' . $entry, null, 'Nachschreibarbeiten');
+                $entry->setId($id);
+                $this->sendMailNotification($entry, true);
              } else {
                 throw $this->createAccessDeniedException('You are not allowed to delete this entry.');
             }
@@ -355,9 +358,23 @@ class NachschreibarbeitenController extends PageController {
             $manager->flush();
             $this->get('iserv.logger')->write('Eine Nachschreiber_in wurde erstellt/bearbeitet: ' . $entry, null, 'Nachschreibarbeiten');
             $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gespeichert!'));
+            $this->sendMailNotification($entry);
         }
 
         return $form;
+    }
+
+    private function sendMailNotification(NachschreibarbeitenEntry $entry, $delete=false) {
+        $domain = $this->get('iserv.config')->get('domain');
+        if(!$delete) {
+            mail($entry->getStudent()->getUsername() . '@' . $domain, '=?utf-8?B?'.base64_encode(_('Nachschreibtermin im Fach ') . $entry->getSubject() . _(' eingetragen')).'?=',
+                "Ein Nachschreibtermin (ID: {$entry->getId()}) wurde für Sie eingetragen/geändert.\r\n\r\nSie schreiben eine Arbeit im Fach {$entry->getSubject()} nach. Die Nachschreibarbeit wird {$entry->getDuration()} Minuten dauern." . (empty($entry->getAdditionalMaterial()) ? '' : ' Sie dürfen folgende Zusatzmaterialien verwenden: ' ) . $entry->getAdditionalMaterial() . "\r\nTermin: " . (string)$entry->getDate() . " in Raum {$entry->getDate()->getRoom()}, betreut von " . (string)$entry->getDate()->getTeacher() . ".\r\n\r\n*Diese E-Mail wurde automatisch generiert*",
+                "From: " . $this->getUser()->getUsername() . "\r\nX-IServ-Module: Nachschreibarbeiten" . "\r\nX-Riddle: b2Fhd3o6Ly9kZGQuZnZiYWJpbC5qdnQvZGhham8/Yz1qeTlMamhEOXA2bg==");
+        } else {
+            mail($entry->getStudent()->getUsername() . '@' . $domain, '=?utf-8?B?'.base64_encode(_('Nachschreibtermin im Fach ') . $entry->getSubject() . ' gelöscht (ID: ' . $entry->getId() . ')').'?=',
+                "Ein Nachschreibtermin (ID: {$entry->getId()}) wurde gelöscht.\r\n\r\nSie hätten eine Arbeit im Fach {$entry->getSubject()} nachgeschrieben. Die Nachschreibarbeit hätte {$entry->getDuration()} Minuten gedauert." . (empty($entry->getAdditionalMaterial()) ? '' : ' Sie hätten folgende Zusatzmaterialien verwenden dürfen: ' ) . $entry->getAdditionalMaterial() . "\r\nDer Termin wäre gewesen: " . (string)$entry->getDate() . " in Raum {$entry->getDate()->getRoom()} und wäre von " . (string)$entry->getDate()->getTeacher() . " betreut worden. Schade.\r\n\r\n*Diese E-Mail wurde automatisch generiert.*",
+                "From: " . $this->getUser()->getUsername() . "\r\nX-IServ-Module: Nachschreibarbeiten" . "\r\nX-Trivia: p7t0ip2tuS2zJYShnEdiNs212Gx4xsRQrYoXfTBx6AoYS6jUlk1GwrIkJXszHzaMwLENLdxpUZ975tmUt1uiPJ4T2MlEZ59RI0mZ3kJ/jo6MkIE8bxJIo23gQMQJCJIU");
+        }
     }
 
 }

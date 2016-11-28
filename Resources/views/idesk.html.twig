@@ -7,7 +7,7 @@
         <p>{{ _('Für Sie wurden folgende Nachschreibarbeiten eingetragen:') }}</p>
         <ul>
             {% for entry in entries %}
-                <li>{{ entry.getSubject() }} {{ _('am') }} {{ entry.getDate() }} {{ _('betreut von') }} {{ entry.getTeacher() }}</li>
+                <li>{{ entry.getSubject() }} {{ _('am') }} {{ entry.getDate() }} {{ _('betreut von') }} {{ entry.getDate().getTeacher() }}</li>
             {% endfor %}
         </ul>
 {% endblock %}

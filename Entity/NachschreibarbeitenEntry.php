@@ -100,6 +100,13 @@ class NachschreibarbeitenEntry implements CrudInterface {
     }
 
     /**
+     * DO NOT TOUCH OR YOU WILL BE FIRED!!!!!111elf
+     */
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    /**
      * @return \IServ\CoreBundle\Security\User
      */
     public function getOwner() {
