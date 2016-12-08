@@ -17,13 +17,13 @@
             <p>{{ _('Raum') }}: {{ date.getRoom() }}, {{ _('Betreuer_in') }}: {{ date.getTeacher() }} </p>
             <table class="table table-striped">
                 <thead class="thead-inverse"><tr>
-                    <th>{{ _('Schüler_in') }}</th>
-                    <th>{{ _('Klasse') }}</th>
-                    <th>{{ _('Fach') }}</th>
-                    <th>{{ _('Zusatzmaterialien') }}</th>
-                    <th>{{ _('Dauer [Minuten]') }}</th>
-                    <th>{{ _('Lehrkraft') }}</th>
-                    <th></th>
+                    <th style="width: 12%">{{ _('Schüler_in') }}</th>
+                    <th style="width: 5%">{{ _('Klasse') }}</th>
+                    <th style="width: 20%">{{ _('Fach') }}</th>
+                    <th style="width: 39%">{{ _('Zusatzmaterialien') }}</th>
+                    <th style="width: 5%">{{ _('Dauer [Minuten]') }}</th>
+                    <th style="width: 12%">{{ _('Lehrkraft') }}</th>
+                    <th style="width: 7%"></th>
                 </tr></thead>
                 <tbody>
                 {% for row in entries[date.getId()] %}
