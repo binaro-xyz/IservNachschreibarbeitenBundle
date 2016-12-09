@@ -6,7 +6,6 @@ namespace IServ\NachschreibarbeitenBundle\Form\Type;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Intl\DateFormatter\IntlDateFormatter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NachschreibarbeitenDateType extends AbstractType {

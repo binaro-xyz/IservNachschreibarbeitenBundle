@@ -7,26 +7,19 @@ use Doctrine\ORM\EntityRepository;
 use IServ\CoreBundle\Controller\PageController;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\UserType;
-use IServ\CoreBundle\IServCoreBundle;
-use IServ\CrudBundle\Mapper\FormMapper;
-use IServ\NachschreibarbeitenBundle\Entity;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenEntry;
 use IServ\NachschreibarbeitenBundle\Form\Type\NachschreibarbeitenDateType;
 use IServ\NachschreibarbeitenBundle\Security\Privilege;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
-use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("nachschreibarbeiten")
@@ -391,8 +384,7 @@ Die Nachschreiber_in wurde NICHT eingetragen.'));
 (SELECT COUNT(*) AS day_count FROM exam_plan WHERE exam_plan.actgrp = ANY((SELECT array_agg(distinct members.actgrp) FROM members WHERE members.actuser= :userid)::text[]) AND exam_plan.date = '{$date->getDate()->format('Y-m-d')}') AS day_count,
 (SELECT COUNT(*) FROM mod_nachschreibarbeiten_entries WHERE student_act = :userid AND mod_nachschreibarbeiten_entries.date_id = (SELECT mod_nachschreibarbeiten_dates.id FROM mod_nachschreibarbeiten_dates WHERE date='{$date->getDate()->format('Y-m-d')}')) AS entry_count;";
         $statement = $em->getConnection()->executeQuery($sql, array(
-            "userid" => $user->getId(),
-            "ndate" => 'ndate', $date->getDate()->format('Y-m-d')
+            "userid" => $user->getId()
         ));
         $conflicts = $statement->fetchAll();
 

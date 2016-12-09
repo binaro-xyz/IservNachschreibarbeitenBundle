@@ -5,8 +5,6 @@ namespace IServ\NachschreibarbeitenBundle\EventListener;
 use Doctrine\Bundle\DoctrineBundle\Registry as Doctrine;
 use IServ\CoreBundle\Event\IDeskEvent;
 use IServ\CoreBundle\EventListener\IDeskListenerInterface;
-use IServ\NachschreibarbeitenBundle\Security\Privilege;
-
 
 class IDeskListener implements IDeskListenerInterface
 {
