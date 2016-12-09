@@ -2,12 +2,14 @@
 // src/IServ/NachschreibarbeitenBundle/Controller/ExerciseController.php
 namespace IServ\NachschreibarbeitenBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use IServ\CoreBundle\Controller\PageController;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\UserType;
 use IServ\CoreBundle\IServCoreBundle;
 use IServ\CrudBundle\Mapper\FormMapper;
+use IServ\NachschreibarbeitenBundle\Entity;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate;
 use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenEntry;
 use IServ\NachschreibarbeitenBundle\Form\Type\NachschreibarbeitenDateType;
@@ -54,6 +56,7 @@ class NachschreibarbeitenController extends PageController {
                 $entries[$result->getDate()->getId()][] = $result;
                 $dates[$result->getDate()->getId()] = $result->getDate();
             }
+
 
             return array(
                 'infotext' => $infotext,
@@ -354,11 +357,16 @@ class NachschreibarbeitenController extends PageController {
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
-            $manager->persist($entry);
-            $manager->flush();
-            $this->get('iserv.logger')->write('Eine Nachschreiber_in wurde erstellt/bearbeitet: ' . $entry, null, 'Nachschreibarbeiten');
-            $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gespeichert!'));
-            $this->sendMailNotification($entry);
+            if(!$this->isCollision($manager, $entry->getStudent(), $entry->getDate())) {
+                $manager->persist($entry);
+                $manager->flush();
+                $this->get('iserv.logger')->write('Eine Nachschreiber_in wurde erstellt/bearbeitet: ' . $entry, null, 'Nachschreibarbeiten');
+                $this->get('iserv.flash')->success(_('Die Nachschreiber_in wurde gespeichert!'));
+                $this->sendMailNotification($entry);
+            } else {
+                $this->get('iserv.flash')->error(_('Für diese Nachschreiber_in besteht bereits ein Nachschreibtermin oder die Nachschreiber_in schreibt bereits zuviele Klausuren!
+Die Nachschreiber_in wurde NICHT eingetragen.'));
+            }
         }
 
         return $form;
@@ -377,4 +385,20 @@ class NachschreibarbeitenController extends PageController {
         }
     }
 
+    private function isCollision(EntityManager $em, User $user, NachschreibarbeitenDate $date) { // I really don't want to use the ORM stuff properly for this!
+        $sql = "SELECT
+(SELECT COUNT(*) FROM exam_plan WHERE exam_plan.actgrp = ANY((SELECT array_agg(distinct members.actgrp) FROM members WHERE members.actuser= :userid )::text[]) AND EXTRACT(WEEK FROM exam_plan.date) = EXTRACT(WEEK FROM TIMESTAMP '{$date->getDate()->format('Y-m-d')}') AND EXTRACT(YEAR FROM exam_plan.date) = EXTRACT(YEAR FROM TIMESTAMP '{$date->getDate()->format('Y-m-d')}')) AS week_count,
+(SELECT COUNT(*) AS day_count FROM exam_plan WHERE exam_plan.actgrp = ANY((SELECT array_agg(distinct members.actgrp) FROM members WHERE members.actuser= :userid)::text[]) AND exam_plan.date = '{$date->getDate()->format('Y-m-d')}') AS day_count,
+(SELECT COUNT(*) FROM mod_nachschreibarbeiten_entries WHERE student_act = :userid AND mod_nachschreibarbeiten_entries.date_id = (SELECT mod_nachschreibarbeiten_dates.id FROM mod_nachschreibarbeiten_dates WHERE date='{$date->getDate()->format('Y-m-d')}')) AS entry_count;";
+        $statement = $em->getConnection()->executeQuery($sql, array(
+            "userid" => $user->getId(),
+            "ndate" => 'ndate', $date->getDate()->format('Y-m-d')
+        ));
+        $conflicts = $statement->fetchAll();
+
+        $config = $this->get('iserv.config');
+        $week_limit = $config->get('ExamPlanMaxWeek');
+        $day_limit = $config->get('ExamPlanMaxDay');
+        return $conflicts['day_count'] < $day_limit && $conflicts['week_count'] < $week_limit && $conflicts['entry_count'] < 1;
+    }
 }
