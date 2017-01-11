@@ -1,12 +1,12 @@
 # Install
 To install, a priviledge file has to be created: `/usr/share/iserv/priv/` containing the following:
 ```
-nachschreibarbeiten_access:
+mod_nachschreibarbeiten_access:
 module          Nachschreibarbeiten
 description     Access the Nachschreibarbeiten module
 assign          admins
 
-nachschreibarbeiten_admin:
+mod_nachschreibarbeiten_admin:
 module          Nachschreibarbeiten
 description     Administer the Nachschreibarbeiten module
 assign          admins

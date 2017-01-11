@@ -391,6 +391,6 @@ Die Nachschreiber_in wurde NICHT eingetragen.'));
         $config = $this->get('iserv.config');
         $week_limit = $config->get('ExamPlanMaxWeek');
         $day_limit = $config->get('ExamPlanMaxDay');
-        return $conflicts[0]['day_count'] > $day_limit || $conflicts[0]['week_count'] > $week_limit || $conflicts[0]['entry_count'] > 1;
+        return $conflicts[0]['day_count'] > $day_limit || $conflicts[0]['week_count'] > $week_limit || $conflicts[0]['entry_count'] > 0;
     }
 }
