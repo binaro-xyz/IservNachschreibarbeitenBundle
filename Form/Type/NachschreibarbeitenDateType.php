@@ -1,6 +1,6 @@
 <?php
 
-namespace IServ\NachschreibarbeitenBundle\Form\Type;
+namespace binaro\NachschreibarbeitenBundle\Form\Type;
 
 
 use Doctrine\ORM\EntityRepository;

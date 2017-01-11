@@ -1,5 +1,5 @@
 <?php
-namespace IServ\NachschreibarbeitenBundle\Validator\Constraints;
+namespace binaro\NachschreibarbeitenBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

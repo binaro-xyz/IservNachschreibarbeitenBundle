@@ -1,10 +1,9 @@
 <?php
-// src/IServ/NachschreibarbeitenBundle/EventListener/MenuListener.php
-namespace IServ\NachschreibarbeitenBundle\EventListener;
+namespace binaro\NachschreibarbeitenBundle\EventListener;
 
 use IServ\CoreBundle\Event\MenuEvent;
 use IServ\CoreBundle\EventListener\MainMenuListenerInterface;
-use IServ\NachschreibarbeitenBundle\Security\Privilege;
+use binaro\NachschreibarbeitenBundle\Security\Privilege;
 
 class MenuListener implements MainMenuListenerInterface
 {

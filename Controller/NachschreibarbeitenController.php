@@ -1,16 +1,15 @@
 <?php
-// src/IServ/NachschreibarbeitenBundle/Controller/ExerciseController.php
-namespace IServ\NachschreibarbeitenBundle\Controller;
+namespace binaro\NachschreibarbeitenBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use IServ\CoreBundle\Controller\PageController;
 use IServ\CoreBundle\Entity\User;
 use IServ\CoreBundle\Form\Type\UserType;
-use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate;
-use IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenEntry;
-use IServ\NachschreibarbeitenBundle\Form\Type\NachschreibarbeitenDateType;
-use IServ\NachschreibarbeitenBundle\Security\Privilege;
+use binaro\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate;
+use binaro\NachschreibarbeitenBundle\Entity\NachschreibarbeitenEntry;
+use binaro\NachschreibarbeitenBundle\Form\Type\NachschreibarbeitenDateType;
+use binaro\NachschreibarbeitenBundle\Security\Privilege;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\DateType;

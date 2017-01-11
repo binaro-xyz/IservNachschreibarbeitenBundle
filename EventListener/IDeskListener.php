@@ -1,6 +1,5 @@
 <?php
-// src/IServ/NachschreibarbeitenBundle/EventListener/IDeskListener.php
-namespace IServ\NachschreibarbeitenBundle\EventListener;
+namespace binaro\NachschreibarbeitenBundle\EventListener;
 
 use Doctrine\Bundle\DoctrineBundle\Registry as Doctrine;
 use IServ\CoreBundle\Event\IDeskEvent;

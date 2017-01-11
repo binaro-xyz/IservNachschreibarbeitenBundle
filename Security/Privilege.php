@@ -1,6 +1,5 @@
 <?php
-// src/IServ/NachschreibarbeitenBundle/Security/Privilege.php
-namespace IServ\NachschreibarbeitenBundle\Security;
+namespace binaro\NachschreibarbeitenBundle\Security;
 
 /**
  * Privilege container for Exercise

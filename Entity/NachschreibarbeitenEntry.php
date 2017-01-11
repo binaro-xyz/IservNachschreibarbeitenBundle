@@ -1,5 +1,5 @@
 <?php
-namespace IServ\NachschreibarbeitenBundle\Entity;
+namespace binaro\NachschreibarbeitenBundle\Entity;
 use IServ\CrudBundle\Entity\CrudInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * NachschreibarbeitenBundle:NachschreibarbeitenEntry
  *
- * @ORM\Entity(repositoryClass="IServ\NachschreibarbeitenBundle\Entity")
+ * @ORM\Entity(repositoryClass="binaro\NachschreibarbeitenBundle\Entity")
  * @ORM\Table(name="mod_nachschreibarbeiten_entries")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -30,10 +30,10 @@ class NachschreibarbeitenEntry implements CrudInterface {
     private $owner;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate")
+     * @ORM\ManyToOne(targetEntity="\binaro\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate")
      * @ORM\JoinColumn(name="date_id", referencedColumnName="id", onDelete="CASCADE")
      *
-     * @var \IServ\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate
+     * @var \binaro\NachschreibarbeitenBundle\Entity\NachschreibarbeitenDate
      */
     private $date;
 
@@ -114,49 +114,49 @@ class NachschreibarbeitenEntry implements CrudInterface {
     }
 
     /**
-     * @param \IServ\NachschreibarbeitenBundle\Entity\User $owner
+     * @param \binaro\NachschreibarbeitenBundle\Entity\User $owner
      */
     public function setOwner($owner) {
         $this->owner = $owner;
     }
 
     /**
-     * @return \IServ\NachschreibarbeitenBundle\Entity\Date
+     * @return \binaro\NachschreibarbeitenBundle\Entity\Date
      */
     public function getDate() {
         return $this->date;
     }
 
     /**
-     * @param \IServ\NachschreibarbeitenBundle\Entity\Date $date
+     * @param \binaro\NachschreibarbeitenBundle\Entity\Date $date
      */
     public function setDate($date) {
         $this->date = $date;
     }
 
     /**
-     * @return \IServ\NachschreibarbeitenBundle\Entity\User
+     * @return \binaro\NachschreibarbeitenBundle\Entity\User
      */
     public function getTeacher() {
         return $this->teacher;
     }
 
     /**
-     * @param \IServ\NachschreibarbeitenBundle\Entity\User $teacher
+     * @param \binaro\NachschreibarbeitenBundle\Entity\User $teacher
      */
     public function setTeacher($teacher) {
         $this->teacher = $teacher;
     }
 
     /**
-     * @return \IServ\NachschreibarbeitenBundle\Entity\User
+     * @return \binaro\NachschreibarbeitenBundle\Entity\User
      */
     public function getStudent() {
         return $this->student;
     }
 
     /**
-     * @param \IServ\NachschreibarbeitenBundle\Entity\User $student
+     * @param \binaro\NachschreibarbeitenBundle\Entity\User $student
      */
     public function setStudent($student) {
         $this->student = $student;

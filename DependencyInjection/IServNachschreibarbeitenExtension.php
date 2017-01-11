@@ -1,6 +1,5 @@
 <?php
-// src/IServ/NachschreibarbeitenBundle/DependencyInjection/IServSkeletonExtension.php
-namespace IServ\NachschreibarbeitenBundle\DependencyInjection;
+namespace binaro\NachschreibarbeitenBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

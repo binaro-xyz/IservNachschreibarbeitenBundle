@@ -1,6 +1,6 @@
 <?php
 
-namespace IServ\NachschreibarbeitenBundle;
+namespace binaro\NachschreibarbeitenBundle;
 
 /**
  * Entity

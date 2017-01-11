@@ -1,6 +1,6 @@
 <?php
 
-namespace IServ\NachschreibarbeitenBundle\Entity;
+namespace binaro\NachschreibarbeitenBundle\Entity;
 
 
 use IServ\CrudBundle\Entity\CrudInterface;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * NachschreibarbeitenBundle:NachschreibarbeitenDate
  *
- * @ORM\Entity(repositoryClass="IServ\NachschreibarbeitenBundle\Entity")
+ * @ORM\Entity(repositoryClass="binaro\NachschreibarbeitenBundle\Entity")
  * @ORM\Table(name="mod_nachschreibarbeiten_dates")
  * @ORM\HasLifecycleCallbacks()
  */
@@ -79,14 +79,14 @@ class NachschreibarbeitenDate implements CrudInterface {
   }
 
   /**
-   * @return \IServ\NachschreibarbeitenBundle\Entity\User
+   * @return \binaro\NachschreibarbeitenBundle\Entity\User
    */
   public function getOwner() {
     return $this->owner;
   }
 
   /**
-   * @param \IServ\NachschreibarbeitenBundle\Entity\User $owner
+   * @param \binaro\NachschreibarbeitenBundle\Entity\User $owner
    */
   public function setOwner($owner) {
     $this->owner = $owner;
@@ -135,14 +135,14 @@ class NachschreibarbeitenDate implements CrudInterface {
   }
 
   /**
-   * @return \IServ\NachschreibarbeitenBundle\Entity\User
+   * @return \binaro\NachschreibarbeitenBundle\Entity\User
    */
   public function getTeacher() {
     return $this->teacher;
   }
 
   /**
-   * @param \IServ\NachschreibarbeitenBundle\Entity\User $teacher
+   * @param \binaro\NachschreibarbeitenBundle\Entity\User $teacher
    */
   public function setTeacher($teacher) {
     $this->teacher = $teacher;

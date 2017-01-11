@@ -1,16 +1,15 @@
-# src/IServ/SkeletonBundle/Resources/config/services.yml
 services:
     twig.extension.intl:
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
     iserv.nachreibarbeiten.menu:
-        class: IServ\NachschreibarbeitenBundle\EventListener\MenuListener
+        class: binaro\NachschreibarbeitenBundle\EventListener\MenuListener
         tags:
           - { name: kernel.event_listener, event: iserv_portal.menu_main, method: onBuildMainMenu }
 
     iserv.nachschreibarbeiten.idesk:
-        class: IServ\NachschreibarbeitenBundle\EventListener\IDeskListener
+        class: binaro\NachschreibarbeitenBundle\EventListener\IDeskListener
         arguments: ["@doctrine"]
         tags:
           - { name: kernel.event_listener, event: iserv_portal.build_idesk, method: onBuildIDesk }

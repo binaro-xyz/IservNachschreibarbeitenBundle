@@ -1,6 +1,6 @@
 <?php
 
-namespace IServ\NachschreibarbeitenBundle\DependencyInjection;
+namespace binaro\NachschreibarbeitenBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

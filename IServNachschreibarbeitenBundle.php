@@ -1,8 +1,7 @@
 <?php
-// src/IServ/NachschreibarbeitenBundle/IServSkeletonBundle.php
-namespace IServ\NachschreibarbeitenBundle;
+namespace binaro\NachschreibarbeitenBundle;
 
-use IServ\NachschreibarbeitenBundle\DependencyInjection\IServNachschreibarbeitenExtension;
+use binaro\NachschreibarbeitenBundle\DependencyInjection\IServNachschreibarbeitenExtension;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class IServNachschreibarbeitenBundle extends Bundle
