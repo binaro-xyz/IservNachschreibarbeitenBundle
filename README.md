@@ -8,7 +8,7 @@ Hint: All these commands must be run as root
     * `wget -O - https://benjamin-altpeter.de/EF3D0E88.asc | apt-key add -`
 2. Add the repo to your sources by running `echo "deb https://apt.altpeter.me jessie base" | tee /etc/apt/sources.list.d/binaro.list`
 3. Run `apt-get update`
-4. Install the package via `apt-get install nachschreibarbeiten`. Alternatively, go into the IServ admin section and install the package from there.
+4. Install the package via `apt-get install nachschreibarbeiten` and run `iservchk` afterwards. Alternatively, go into the IServ admin section and install the package from there.
 5. Clear the cache manually using `php /usr/share/iserv/app/console cache:clear --env=prod; chmod -R 774 /var/cache/iserv/web/prod; service apache2 restart` or wait for IServ to do that automatically.
 
 ## Manual install
