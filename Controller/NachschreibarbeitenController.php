@@ -29,7 +29,7 @@ class NachschreibarbeitenController extends PageController {
      * @Template()
      * @return array|RedirectResponse
      */
-    public function indexAction(Request $request, $path) {
+    public function indexAction(Request $request) {
         if($this->isGranted(Privilege::ACCESS_NACHSCHREIBARBEITEN) || $this->isGranted(Privilege::ADMIN_NACHSCHREIBARBEITEN)) {
             $manager = $this->getDoctrine()->getManager();
             $repo = $manager->getRepository('IServNachschreibarbeitenBundle:NachschreibarbeitenEntry');
